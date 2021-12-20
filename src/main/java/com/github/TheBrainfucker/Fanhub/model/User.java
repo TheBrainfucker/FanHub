@@ -2,6 +2,9 @@ package com.github.TheBrainfucker.Fanhub.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.yaml.snakeyaml.constructor.Construct;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
@@ -22,6 +25,10 @@ public class User {
 
     @Column(name = "name")
     private String name;
+
+    public User() {
+
+    }
 
     public User(String email, String username, String name) {
         super();
