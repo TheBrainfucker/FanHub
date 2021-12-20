@@ -1,2 +1,3 @@
 # Fanhub
-Fanhub using React and Spring Boot
+
+Fanhub using React, Spring Boot, and MySQL
