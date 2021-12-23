@@ -3,8 +3,6 @@ package com.github.TheBrainfucker.Fanhub.model;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.yaml.snakeyaml.constructor.Construct;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
