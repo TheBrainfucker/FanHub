@@ -17,10 +17,9 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        console.log("Rightbar user: " + user.id);
-        const subscriptions = await axios.get(
-          "/users/subscriptions/" + user.id
-        );
+        const subscriptions = user
+          ? await axios.get("/users/subscriptions/" + user.id)
+          : await axios.get("/users/subscriptions/" + currentUser.id);
         setFriends(subscriptions.data);
       } catch (err) {
         console.log(err);
@@ -32,11 +31,9 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const getSuggestions = async () => {
       try {
-        console.log("Rightbar user: " + currentUser.id);
         const suggestions = await axios.get(
           "/users/suggestions/" + currentUser.id
         );
-        console.log(suggestions);
         setSuggestions(suggestions.data);
       } catch (err) {
         console.log(err);
