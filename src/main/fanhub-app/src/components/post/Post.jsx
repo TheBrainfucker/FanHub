@@ -60,7 +60,7 @@ export default function Post({ post }) {
           <span className="postText">{post?.caption}</span>
           <img
             className="postImg"
-            src={PF + "post/uploads/" + post.content}
+            src={post.content ? PF + "post/uploads/" + post.content : ""}
             alt=""
           />
         </div>
