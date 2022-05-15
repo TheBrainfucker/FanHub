@@ -24,7 +24,7 @@ const AuthReducer = (state, action) => {
         isFetching: false,
         error: false,
       };
-    case "FOLLOW":
+    case "SUBSCRIBE":
       return {
         ...state,
         user: {
@@ -32,7 +32,7 @@ const AuthReducer = (state, action) => {
           subscriptionids: [...state.user.subscriptionids, action.payload],
         },
       };
-    case "UNFOLLOW":
+    case "UNSUBSCRIBE":
       return {
         ...state,
         user: {

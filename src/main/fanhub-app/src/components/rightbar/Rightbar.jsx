@@ -7,20 +7,20 @@ import { Add, Remove, Search } from "@material-ui/icons";
 
 export default function Rightbar({ user }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [friends, setFriends] = useState([]);
+  const [creators, setCreators] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [followed, setFollowed] = useState(
+  const [subscribed, setSubscribed] = useState(
     currentUser.subscriptionids.includes(user?.id)
   );
 
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const subscriptions = user
+        const creators = user
           ? await axios.get("/users/subscriptions/" + user.id)
           : await axios.get("/users/subscriptions/" + currentUser.id);
-        setFriends(subscriptions.data);
+        setCreators(creators.data);
       } catch (err) {
         console.log(err);
       }
@@ -44,14 +44,14 @@ export default function Rightbar({ user }) {
 
   const handleClick = async () => {
     try {
-      if (followed) {
+      if (subscribed) {
         await axios.put(`/users/${user.id}/unsubscribe/${currentUser.id}`);
-        dispatch({ type: "UNFOLLOW", payload: user.id });
+        dispatch({ type: "UNSUBSCRIBE", payload: user.id });
       } else {
         await axios.put(`/users/${user.id}/subscribe/${currentUser.id}`);
-        dispatch({ type: "FOLLOW", payload: user.id });
+        dispatch({ type: "SUBSCRIBE", payload: user.id });
       }
-      setFollowed(!followed);
+      setSubscribed(!subscribed);
     } catch (err) {}
   };
 
@@ -98,8 +98,8 @@ export default function Rightbar({ user }) {
       <>
         {user.username !== currentUser.username && (
           <button className="rightbarFollowButton" onClick={handleClick}>
-            {followed ? "Unsubscribe" : "Subscribe"}
-            {followed ? <Remove /> : <Add />}
+            {subscribed ? "Unsubscribe" : "Subscribe"}
+            {subscribed ? <Remove /> : <Add />}
           </button>
         )}
         <h4 className="rightbarTitle">Intro</h4>
@@ -117,22 +117,24 @@ export default function Rightbar({ user }) {
         </div>
         <h4 className="rightbarTitle">Subscriptions</h4>
         <div className="rightbarFollowings">
-          {friends.map((friend) => (
+          {creators.map((creator) => (
             <Link
-              to={"/profile/" + friend.username}
+              to={"/profile/" + creator.username}
               style={{ textDecoration: "none" }}
             >
               <div className="rightbarFollowing">
                 <img
                   src={
-                    friend.profilepic
-                      ? PF + friend.profilepic
+                    creator.profilepic
+                      ? PF + creator.profilepic
                       : PF + "person/noAvatar.png"
                   }
                   alt=""
                   className="rightbarFollowingImg"
                 />
-                <span className="rightbarFollowingName">{friend.username}</span>
+                <span className="rightbarFollowingName">
+                  {creator.username}
+                </span>
               </div>
             </Link>
           ))}
