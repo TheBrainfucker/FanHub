@@ -25,8 +25,10 @@ import javax.persistence.OneToMany;
 
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "posts", "fans", "subscriptions" }) // Infinite Recursive
-// fetching of data
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "posts", "fans", "subscriptions", "loves" }) // Infinite
+                                                                                                            // Recursive
+                                                                                                            // fetching
+                                                                                                            // of data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +74,9 @@ public class User {
 
     @ManyToMany(targetEntity = User.class, mappedBy = "fans")
     private Set<User> subscriptions = new HashSet<User>();
+
+    @ManyToMany(targetEntity = Post.class, mappedBy = "lovers")
+    private Set<Post> loves = new HashSet<Post>();
 
     public User() {
     }
@@ -210,6 +215,22 @@ public class User {
 
     public void setSubscriptions(Set<User> subscriptions) {
         this.subscriptions = subscriptions;
+    }
+
+    public Set<Post> getLoves() {
+        return loves;
+    }
+
+    public Set<Long> getLovesIds() {
+        Set<Long> lovesids = new HashSet<>();
+        for (Post love : loves) {
+            lovesids.add(love.getId());
+        }
+        return lovesids;
+    }
+
+    public void setLoves(Set<Post> loves) {
+        this.loves = loves;
     }
 
     public void addFanSubscription(User creator) {

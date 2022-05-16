@@ -7,18 +7,31 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Post({ post }) {
+  const [love, setLove] = useState(post.love);
+  const [isLoved, setIsLoved] = useState();
   const [user, setUser] = useState({});
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser } = useContext(AuthContext);
 
   useEffect(() => {
+    setIsLoved(post.loversIds.includes(currentUser.id));
+  }, [currentUser.id, post.lovers]);
+
+  useEffect(() => {
     const fetchUser = async () => {
       const res = await axios.get(`/users/${post.user.id}`);
       setUser(res.data);
-      // console.log("Post user:" + user.username);
     };
     fetchUser();
   }, [post.user.id]);
+
+  const loveHandler = () => {
+    try {
+      axios.put(`/posts/${post.id}/love/${currentUser.id}`);
+    } catch (err) {}
+    setLove(isLoved ? love - 1 : love + 1);
+    setIsLoved(!isLoved);
+  };
 
   const handleDelete = async () => {
     const content = post.content;
@@ -69,10 +82,10 @@ export default function Post({ post }) {
             <img
               className="likeIcon"
               src={`${PF}heart.png`}
-              // onClick={likeHandler}
+              onClick={loveHandler}
               alt=""
             />
-            <span className="postLikeCounter">{post.love} fans love it</span>
+            <span className="postLikeCounter">{love} fans love it</span>
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">comments</span>

@@ -7,10 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -35,6 +39,10 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
+
+    @ManyToMany
+    @JoinTable(name = "loves", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> lovers = new HashSet<User>();
 
     public Post() {
     }
@@ -97,6 +105,34 @@ public class Post {
 
     public Long getLove() {
         return love;
+    }
+
+    public Set<User> getLovers() {
+        return lovers;
+    }
+
+    public Set<Long> getLoversIds() {
+        Set<Long> loversids = new HashSet<>();
+        for (User lover : lovers) {
+            loversids.add(lover.getId());
+        }
+        return loversids;
+    }
+
+    public void setLovers(Set<User> lovers) {
+        this.lovers = lovers;
+    }
+
+    public void addFanLove(User lover) {
+        lovers.add(lover);
+        lover.getLoves().add(this);
+        this.love += 1;
+    }
+
+    public void removeFanLove(User lover) {
+        lovers.remove(lover);
+        lover.getLoves().remove(this);
+        this.love -= 1;
     }
 
 }

@@ -156,4 +156,25 @@ public class PostController {
                 .body(file);
     }
 
+    @PutMapping("/{id}/love/{userid}")
+    public ResponseEntity<String> love(@PathVariable Long id, @PathVariable Long userid) {
+        String message = "";
+        try {
+            Post post = postRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Post (id:" + id + ") not found!"));
+            Set<Long> lovers = post.getLoversIds();
+            if (!lovers.contains(userid)) {
+                postServiceImpl.love(id, userid);
+                message = "Reacted love.";
+                return ResponseEntity.status(HttpStatus.OK).body(message);
+            } else {
+                postServiceImpl.unlove(id, userid);
+                message = "Removed love.";
+                return ResponseEntity.status(HttpStatus.OK).body(message);
+            }
+        } catch (Exception e) {
+            message = "Could not love/unlove!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+        }
+    }
 }

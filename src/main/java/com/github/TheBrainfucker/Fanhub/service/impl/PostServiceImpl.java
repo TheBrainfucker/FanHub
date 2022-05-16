@@ -5,9 +5,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
+import com.github.TheBrainfucker.Fanhub.exception.ResourceNotFoundException;
 import com.github.TheBrainfucker.Fanhub.model.Post;
 import com.github.TheBrainfucker.Fanhub.model.User;
 import com.github.TheBrainfucker.Fanhub.repository.PostRepository;
+import com.github.TheBrainfucker.Fanhub.repository.UserRepository;
 import com.github.TheBrainfucker.Fanhub.service.PostService;
 
 import org.json.JSONException;
@@ -20,6 +24,9 @@ public class PostServiceImpl implements PostService<Post> {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Collection<Post> findAll() {
@@ -55,4 +62,21 @@ public class PostServiceImpl implements PostService<Post> {
         return postRepository.findTop100ByUser_IdInOrderByDateDesc(ids);
     }
 
+    @Transactional
+    public void love(Long postid, Long userid) {
+        Post post = postRepository.findById(postid)
+                .orElseThrow(() -> new ResourceNotFoundException("Post id:" + postid + ") not found!"));
+        User lover = userRepository.findById(userid)
+                .orElseThrow(() -> new ResourceNotFoundException("Lover id:" + userid + ") not found!"));
+        post.addFanLove(lover);
+    }
+
+    @Transactional
+    public void unlove(Long postid, Long userid) {
+        Post post = postRepository.findById(postid)
+                .orElseThrow(() -> new ResourceNotFoundException("Post id:" + postid + ") not found!"));
+        User lover = userRepository.findById(userid)
+                .orElseThrow(() -> new ResourceNotFoundException("Lover id:" + userid + ") not found!"));
+        post.removeFanLove(lover);
+    }
 }

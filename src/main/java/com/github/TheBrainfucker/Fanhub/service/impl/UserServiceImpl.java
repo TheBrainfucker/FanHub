@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService<User> {
     }
 
     @Transactional
-    public Set<User> getFollowing(Long fanid) {
+    public Set<User> getSubscriptions(Long fanid) {
         User fan = userRepository.findById(fanid)
                 .orElseThrow(() -> new ResourceNotFoundException("User (id:" + fanid + ") not found!"));
         return fan.getFans();
