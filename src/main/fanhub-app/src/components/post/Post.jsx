@@ -60,13 +60,17 @@ export default function Post({ post }) {
                 alt=""
               />
             </Link>
-            <span className="postUsername">{user.username}</span>
+            <Link to={`/profile/${user.username}`} className="postUsernameLink">
+              <span className="postUsername">{user.username}</span>
+            </Link>
             <span className="postDate">{format(post.date)}</span>
           </div>
           <div className="postTopRight">
-            <i onClick={handleDelete}>
-              <Delete />
-            </i>
+            {currentUser.id === user.id && (
+              <i onClick={handleDelete}>
+                <Delete />
+              </i>
+            )}
           </div>
         </div>
         <div className="postCenter">
@@ -80,12 +84,12 @@ export default function Post({ post }) {
         <div className="postBottom">
           <div className="postBottomLeft">
             <img
-              className="likeIcon"
-              src={`${PF}heart.png`}
+              className="loveIcon"
+              src={isLoved ? `${PF}love.png` : `${PF}heart.png`}
               onClick={loveHandler}
               alt=""
             />
-            <span className="postLikeCounter">{love} fans love it</span>
+            <span className="postLoveCounter">{love} fans love it</span>
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">comments</span>

@@ -26,11 +26,20 @@
   align-items: center;
 }
 
+.postTopRight i {
+  cursor: pointer;
+}
+
 .postProfileImg {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.postUsernameLink {
+  text-decoration: none;
+  color: white;
 }
 
 .postUsername {
@@ -66,14 +75,14 @@
   align-items: center;
 }
 
-.likeIcon {
+.loveIcon {
   width: 24px;
   height: 24px;
   margin-right: 5px;
   cursor: pointer;
 }
 
-.postLikeCounter {
+.postLoveCounter {
   font-size: 15px;
 }
 

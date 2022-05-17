@@ -68,27 +68,18 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
-    // get all posts by username rest api
-    @GetMapping("/profile/{username}")
-    public ResponseEntity<List<Post>> getPostsByUsername(@PathVariable("username") String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(username + " not found"));
-        List<Post> posts = postRepository.findByUserid(user.getId());
-        return new ResponseEntity<>(posts, HttpStatus.OK);
-    }
-
-    // get all posts by userid rest api
-    @GetMapping("/timeline/{userid}")
-    public ResponseEntity<Set<Post>> getPostsByUserid(@PathVariable("userid") Long userid) {
+    // get all subscriptions' posts by userid rest api
+    @GetMapping("/feed/{userid}")
+    public ResponseEntity<Set<Post>> getFeedByUserid(@PathVariable("userid") Long userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new ResourceNotFoundException("Userid:" + userid + ") not found!"));
         Set<Post> posts = postServiceImpl.getFeed(user);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    // get all posts of creators rest api
-    @GetMapping("/feed/{username}")
-    public ResponseEntity<List<Post>> getFeedByUserid(@PathVariable("username") String username) {
+    // get all posts of a creator rest api
+    @GetMapping("/timeline/{username}")
+    public ResponseEntity<List<Post>> getPostsByUsername(@PathVariable("username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Username:" + username + ") not found!"));
         List<Post> posts = postRepository.findByUserid(user.getId());
@@ -125,6 +116,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    // delete a file rest api
     @DeleteMapping("/{filename:.+}")
     public ResponseEntity<String> deleteContent(@PathVariable String filename) {
         try {
@@ -156,6 +148,7 @@ public class PostController {
                 .body(file);
     }
 
+    // love react a post rest api
     @PutMapping("/{id}/love/{userid}")
     public ResponseEntity<String> love(@PathVariable Long id, @PathVariable Long userid) {
         String message = "";
