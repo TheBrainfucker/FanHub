@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -69,21 +70,21 @@ public class PostController {
     }
 
     // get all subscriptions' posts by userid rest api
-    @GetMapping("/feed/{userid}")
-    public ResponseEntity<Set<Post>> getFeedByUserid(@PathVariable("userid") Long userid) {
+    @GetMapping(path = "/feed/{userid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getFeedByUserid(@PathVariable("userid") Long userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new ResourceNotFoundException("Userid:" + userid + ") not found!"));
-        Set<Post> posts = postServiceImpl.getFeed(user);
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        Set<JSONObject> posts = postServiceImpl.getFeed(user);
+        return new ResponseEntity<>(posts.toString(), HttpStatus.OK);
     }
 
     // get all posts of a creator rest api
-    @GetMapping("/timeline/{username}")
-    public ResponseEntity<List<Post>> getPostsByUsername(@PathVariable("username") String username) {
+    @GetMapping(path = "/timeline/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getPostsByUsername(@PathVariable("username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Username:" + username + ") not found!"));
-        List<Post> posts = postRepository.findByUserid(user.getId());
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        Set<JSONObject> posts = postServiceImpl.getTimeline(user);
+        return new ResponseEntity<>(posts.toString(), HttpStatus.OK);
     }
 
     // update a post rest api

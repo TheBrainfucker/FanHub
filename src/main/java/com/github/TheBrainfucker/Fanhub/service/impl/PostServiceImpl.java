@@ -1,6 +1,8 @@
 package com.github.TheBrainfucker.Fanhub.service.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,11 +57,48 @@ public class PostServiceImpl implements PostService<Post> {
         return jsonObject.toString();
     }
 
-    public Set<Post> getFeed(User user) {
-        Set<User> subscriptions = user.getSubscriptions();
-        subscriptions.add(user);
-        Set<Long> ids = subscriptions.stream().map(User::getId).collect(Collectors.toSet());
-        return postRepository.findTop100ByUser_IdInOrderByDateDesc(ids);
+    public Set<JSONObject> getFeed(User user) {
+        // Set<User> subscriptions = user.getSubscriptions();
+        // subscriptions.add(user);
+        // Set<Long> ids =
+        // subscriptions.stream().map(User::getId).collect(Collectors.toSet());
+        Set<Long> ids = user.getSubscriptionIds();
+        ids.add(user.getId());
+        Set<Post> posts = postRepository.findTop100ByUser_IdInOrderByDateDesc(ids);
+        Set<JSONObject> newPosts = new HashSet<>();
+        for (Post post : posts) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", post.getId());
+            jsonObject.put("caption", post.getCaption());
+            jsonObject.put("content", post.getContent());
+            jsonObject.put("date", post.getDate());
+            jsonObject.put("love", post.getLove());
+            JSONObject userObject = new JSONObject();
+            userObject.put("id", post.getUser().getId());
+            jsonObject.put("user", userObject);
+            jsonObject.put("loversIds", post.getLoversIds());
+            newPosts.add(jsonObject);
+        }
+        return newPosts;
+    }
+
+    public Set<JSONObject> getTimeline(User user) {
+        List<Post> posts = postRepository.findByUserid(user.getId());
+        Set<JSONObject> newPosts = new HashSet<>();
+        for (Post post : posts) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", post.getId());
+            jsonObject.put("caption", post.getCaption());
+            jsonObject.put("content", post.getContent());
+            jsonObject.put("date", post.getDate());
+            jsonObject.put("love", post.getLove());
+            JSONObject userObject = new JSONObject();
+            userObject.put("id", post.getUser().getId());
+            jsonObject.put("user", userObject);
+            jsonObject.put("loversIds", post.getLoversIds());
+            newPosts.add(jsonObject);
+        }
+        return newPosts;
     }
 
     @Transactional
