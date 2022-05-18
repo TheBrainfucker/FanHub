@@ -70,7 +70,7 @@ export default function Sidebar() {
             </Link>
           </li>
           <li className="sidebarListItem">
-            <Link to={`/profile/${user.username}`}>
+            <Link to={`/${user.username}`}>
               <img
                 src={
                   user.profilepic

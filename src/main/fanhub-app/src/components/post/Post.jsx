@@ -49,7 +49,7 @@ export default function Post({ post }) {
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-            <Link to={`/profile/${user.username}`}>
+            <Link to={`/${user.username}`}>
               <img
                 className="postProfileImg"
                 src={
@@ -60,7 +60,7 @@ export default function Post({ post }) {
                 alt=""
               />
             </Link>
-            <Link to={`/profile/${user.username}`} className="postUsernameLink">
+            <Link to={`/${user.username}`} className="postUsernameLink">
               <span className="postUsername">{user.username}</span>
             </Link>
             <span className="postDate">{format(post.date)}</span>

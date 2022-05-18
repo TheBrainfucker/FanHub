@@ -69,7 +69,7 @@ export default function Rightbar({ user }) {
         <div className="rightbarFollowings">
           {suggestions.map((suggestions) => (
             <Link
-              to={"/profile/" + suggestions.username}
+              to={"/" + suggestions.username}
               style={{ textDecoration: "none" }}
             >
               <div className="rightbarFollowing">
@@ -122,7 +122,7 @@ export default function Rightbar({ user }) {
           <div className="rightbarFollowings">
             {creators.map((creator) => (
               <Link
-                to={"/profile/" + creator.username}
+                to={"/" + creator.username}
                 style={{ textDecoration: "none" }}
               >
                 <div className="rightbarFollowing">

@@ -23,7 +23,7 @@ function App() {
         <Route path="/register">
           {user ? <Home /> : <Register />}
         </Route>
-        <Route path="/profile/:username">
+        <Route path="/:username">
           {user ? <Profile /> : <Login />}
         </Route>
       </Switch>
