@@ -25,8 +25,8 @@ export default function Sidebar() {
     <div className="sidebar">
       <div className="sidebarWrapper">
         <ul className="sidebarList">
-          <li className="sidebarListItem">
-            <Link to="/" style={{ textDecoration: "none" }}>
+          <li className="sidebarListLogo">
+            <Link to="/">
               <img
                 alt="Fanhub"
                 src={PF + "logo/Fanhub1.png"}
@@ -35,33 +35,43 @@ export default function Sidebar() {
             </Link>
           </li>
           <li className="sidebarListItem">
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <HomeRounded className="sidebarIcon" fontSize="large" />
+            <Link to="/">
+              <HomeRounded className="sidebarListItemIcon" fontSize="large" />
+              <span className="sidebarListItemText">Home</span>
             </Link>
-            <span className="sidebarListItemText">Home</span>
           </li>
           <li className="sidebarListItem">
-            <Notifications className="sidebarIcon" fontSize="large" />
-            <span className="sidebarListItemText">Notifications</span>
+            <Link to="/">
+              <Notifications className="sidebarListItemIcon" fontSize="large" />
+              <span className="sidebarListItemText">Notifications</span>
+            </Link>
           </li>
           <li className="sidebarListItem">
-            <Chat className="sidebarIcon" fontSize="large" />
-            <span className="sidebarListItemText">Chats</span>
+            <Link to="/">
+              <Chat className="sidebarListItemIcon" fontSize="large" />
+              <span className="sidebarListItemText">Chats</span>
+            </Link>
           </li>
           <li className="sidebarListItem">
-            <PlayCircleFilledOutlined
-              className="sidebarIcon"
-              fontSize="large"
-            />
-            <span className="sidebarListItemText">Videos</span>
+            <Link to="/">
+              <PlayCircleFilledOutlined
+                className="sidebarListItemIcon"
+                fontSize="large"
+              />
+              <span className="sidebarListItemText">Videos</span>
+            </Link>
           </li>
           <li className="sidebarListItem">
-            <Bookmark className="sidebarIcon" fontSize="large" />
-            <span className="sidebarListItemText">Bookmarks</span>
+            <Link to="/">
+              <Bookmark className="sidebarListItemIcon" fontSize="large" />
+              <span className="sidebarListItemText">Bookmarks</span>
+            </Link>
           </li>
           <li className="sidebarListItem">
-            <CreditCard className="sidebarIcon" fontSize="large" />
-            <span className="sidebarListItemText">Add card</span>
+            <Link to="/">
+              <CreditCard className="sidebarListItemIcon" fontSize="large" />
+              <span className="sidebarListItemText">Add card</span>
+            </Link>
           </li>
           <li className="sidebarListItem">
             <Link to={`/profile/${user.username}`}>
@@ -74,14 +84,17 @@ export default function Sidebar() {
                 alt=""
                 className="sidebarImg"
               />
+              <span className="sidebarListItemText">{user.username}</span>
             </Link>
-            <span className="sidebarListItemText">{user.username}</span>
           </li>
           <li className="sidebarListItem">
             <Link to={`/login`} onClick={handleLogout}>
-              <ExitToAppRounded className="sidebarIcon" fontSize="large" />
+              <ExitToAppRounded
+                className="sidebarListItemIcon"
+                fontSize="large"
+              />
+              <span className="sidebarListItemText">Logout</span>
             </Link>
-            <span className="sidebarListItemText">Logout</span>
           </li>
         </ul>
         <button className="sidebarButton">More...</button>

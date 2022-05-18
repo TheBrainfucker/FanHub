@@ -21,6 +21,10 @@
   align-items: center;
 }
 
+.postTopLeft a:focus {
+  outline: none;
+}
+
 .postTopRight {
   display: flex;
   align-items: center;

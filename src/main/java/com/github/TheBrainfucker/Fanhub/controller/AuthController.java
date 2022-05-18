@@ -49,18 +49,17 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody User user) {
         log.info("AuthController : register");
         JSONObject jsonObject = new JSONObject();
-        System.out.println();
-        System.out.println("THIS is IT this IS it THIS is IT this IS it THIS is IT this IS it");
-        System.out.println();
         if (userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(jsonObject.put("message", "Error: " + user.getName() + " is already taken!").toString());
+                    .body(jsonObject.put("message", "Error: username " + user.getName() + " is already taken!")
+                            .toString());
         }
         if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(jsonObject.put("message", "Error: " + user.getEmail() + " is already in use!").toString());
+                    .body(jsonObject.put("message", "Error: email " + user.getEmail() + " is already in use!")
+                            .toString());
         }
         try {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -92,7 +91,7 @@ public class AuthController {
                         .orElseThrow(() -> new ResourceNotFoundException(email + " not found"));
                 jsonObject.put("id", savedUser.getId());
                 jsonObject.put("username", savedUser.getUsername());
-                jsonObject.put("email", authentication.getName());
+                jsonObject.put("name", authentication.getName());
                 jsonObject.put("profilepic", savedUser.getProfilepic());
                 jsonObject.put("coverpic", savedUser.getCoverpic());
                 jsonObject.put("fanids", savedUser.getFanIds());

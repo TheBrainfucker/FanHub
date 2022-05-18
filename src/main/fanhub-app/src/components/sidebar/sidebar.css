@@ -27,6 +27,7 @@
   list-style: none;
 }
 
+.sidebarListLogo,
 .sidebarListItem {
   display: flex;
   align-items: center;
@@ -34,10 +35,40 @@
 }
 
 .sidebarListItem a {
+  display: flex;
+  align-items: center;
   color: white;
+  text-decoration: none;
+  width: 95%;
 }
 
-.sidebarIcon {
+.sidebarListItem a:hover {
+  color: rgba(255, 163, 26, 1);
+}
+
+.sidebarListItem a:hover::after {
+  content: "";
+  position: absolute;
+  transform: translate(-5%, 0%);
+  width: 90%;
+  height: 40px;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  opacity: 10%;
+  border-radius: 100px;
+  background-color: #0091ea;
+  display: block;
+}
+
+.sidebarListItem a:focus {
+  outline: none;
+}
+
+.sidebarListItemText {
+  font-weight: 500;
+}
+
+.sidebarListItemIcon {
   margin-right: 15px;
 }
 
@@ -60,8 +91,8 @@
 }
 
 .sidebarImg {
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
