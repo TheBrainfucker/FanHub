@@ -70,28 +70,53 @@ public class UserServiceImpl implements UserService<User> {
     }
 
     @Transactional
-    public Set<User> getFans(Long creatorid) {
+    public Set<JSONObject> getFans(Long creatorid) {
         User creator = userRepository.findById(creatorid)
                 .orElseThrow(() -> new ResourceNotFoundException("User (id:" + creatorid + ") not found!"));
-        return creator.getFans();
+        Set<User> fans = creator.getFans();
+        Set<JSONObject> newFans = new HashSet<>();
+        for (User fan : fans) {
+            if (fan.getRole().getName().equals("USER")) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", fan.getId());
+                jsonObject.put("username", fan.getUsername());
+                jsonObject.put("profilepic", fan.getProfilepic());
+                newFans.add(jsonObject);
+            }
+        }
+        return newFans;
     }
 
-    @Transactional
-    public Set<User> getSubscriptions(Long fanid) {
+    public Set<JSONObject> getSubscriptions(Long fanid) {
         User fan = userRepository.findById(fanid)
                 .orElseThrow(() -> new ResourceNotFoundException("User (id:" + fanid + ") not found!"));
-        return fan.getFans();
+        Set<User> subscriptions = fan.getSubscriptions();
+        Set<JSONObject> newSubscriptions = new HashSet<>();
+        for (User subscription : subscriptions) {
+            if (subscription.getRole().getName().equals("USER")) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", subscription.getId());
+                jsonObject.put("username", subscription.getUsername());
+                jsonObject.put("profilepic", subscription.getProfilepic());
+                newSubscriptions.add(jsonObject);
+            }
+        }
+        return newSubscriptions;
     }
 
-    public Set<User> getSuggestions(Set<Long> subscriptionIds) {
+    public Set<JSONObject> getSuggestions(Set<Long> subscriptionIds) {
         Set<User> suggestions = userRepository.findByIdNotIn(
                 subscriptionIds)
                 .orElseThrow(() -> new ResourceNotFoundException("Suggestions not found!"));
 
-        Set<User> newSuggestions = new HashSet<>();
+        Set<JSONObject> newSuggestions = new HashSet<>();
         for (User suggestion : suggestions) {
             if (suggestion.getRole().getName().equals("USER")) {
-                newSuggestions.add(suggestion);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", suggestion.getId());
+                jsonObject.put("username", suggestion.getUsername());
+                jsonObject.put("profilepic", suggestion.getProfilepic());
+                newSuggestions.add(jsonObject);
             }
         }
         return newSuggestions;

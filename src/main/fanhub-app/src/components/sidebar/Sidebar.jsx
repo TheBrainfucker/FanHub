@@ -27,11 +27,7 @@ export default function Sidebar() {
         <ul className="sidebarList">
           <li className="sidebarListLogo">
             <Link to="/">
-              <img
-                alt="Fanhub"
-                src={PF + "logo/Fanhub1.png"}
-                style={{ height: "36px", width: "100px" }}
-              />
+              <img alt="Fanhub" src={PF + "logo/Fanhub1.png"} />
             </Link>
           </li>
           <li className="sidebarListItem">

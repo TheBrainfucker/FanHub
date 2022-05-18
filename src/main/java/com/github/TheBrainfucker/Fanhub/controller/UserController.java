@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -56,19 +58,36 @@ public class UserController {
 
     // get user by id rest api
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<String> getUserById(@PathVariable Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User (id:" + id + ") not found!"));
-        return ResponseEntity.ok(user);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", user.getId());
+        jsonObject.put("username", user.getUsername());
+        jsonObject.put("name", user.getName());
+        jsonObject.put("profilepic", user.getProfilepic());
+        jsonObject.put("coverpic", user.getCoverpic());
+        jsonObject.put("bio", user.getBio());
+        jsonObject.put("relationship", user.getRelationship());
+        jsonObject.put("city", user.getCity());
+        return new ResponseEntity<String>(jsonObject.toString(), HttpStatus.OK);
     }
 
     // get any user profile by username
     @GetMapping("/profile")
-    public ResponseEntity<User> getUserByUsername(@RequestParam("username") String username) {
+    public ResponseEntity<String> getUserByUsername(@RequestParam("username") String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException(username + " not found"));
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", user.getId());
+        jsonObject.put("username", user.getUsername());
+        jsonObject.put("name", user.getName());
+        jsonObject.put("profilepic", user.getProfilepic());
+        jsonObject.put("coverpic", user.getCoverpic());
+        jsonObject.put("bio", user.getBio());
+        jsonObject.put("relationship", user.getRelationship());
+        jsonObject.put("city", user.getCity());
+        return new ResponseEntity<String>(jsonObject.toString(), HttpStatus.OK);
     }
 
     // update user rest api
@@ -127,18 +146,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/fans/{id}")
-    public ResponseEntity<Set<User>> getFans(@PathVariable Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User (id:" + id + ") not found!"));
-        return new ResponseEntity<>(user.getFans(), HttpStatus.OK);
+    @GetMapping(path = "/fans/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getFans(@PathVariable Long id) {
+        Set<JSONObject> fans = userServiceImpl.getFans(id);
+        return new ResponseEntity<>(fans.toString(), HttpStatus.OK);
     }
 
-    @GetMapping("/subscriptions/{id}")
-    public ResponseEntity<Set<User>> getSubscriptions(@PathVariable Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User (id:" + id + ") not found!"));
-        return new ResponseEntity<>(user.getSubscriptions(), HttpStatus.OK);
+    @GetMapping(path = "/subscriptions/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getSubscriptions(@PathVariable Long id) {
+        Set<JSONObject> subscriptions = userServiceImpl.getSubscriptions(id);
+        return new ResponseEntity<>(subscriptions.toString(), HttpStatus.OK);
     }
 
     // @GetMapping("/fanids/{id}")
@@ -171,14 +188,14 @@ public class UserController {
         return ResponseEntity.ok("Unsubscribed");
     }
 
-    @GetMapping("/suggestions/{fanid}")
-    public ResponseEntity<Set<User>> getSuggestions(@PathVariable Long fanid) {
+    @GetMapping(path = "/suggestions/{fanid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getSuggestions(@PathVariable Long fanid) {
         User user = userRepository.findById(fanid)
                 .orElseThrow(() -> new ResourceNotFoundException("User (id:" + fanid + ") not found!"));
         Set<Long> subscriptionids = user.getSubscriptionIds();
         subscriptionids.add(user.getId());
-        Set<User> suggestions = userServiceImpl.getSuggestions(subscriptionids);
-        return ResponseEntity.ok(suggestions);
+        Set<JSONObject> suggestions = userServiceImpl.getSuggestions(subscriptionids);
+        return ResponseEntity.ok(suggestions.toString());
     }
 
 }

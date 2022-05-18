@@ -91,7 +91,7 @@ public class AuthController {
                         .orElseThrow(() -> new ResourceNotFoundException(email + " not found"));
                 jsonObject.put("id", savedUser.getId());
                 jsonObject.put("username", savedUser.getUsername());
-                jsonObject.put("name", authentication.getName());
+                jsonObject.put("email", authentication.getName());
                 jsonObject.put("profilepic", savedUser.getProfilepic());
                 jsonObject.put("coverpic", savedUser.getCoverpic());
                 jsonObject.put("fanids", savedUser.getFanIds());

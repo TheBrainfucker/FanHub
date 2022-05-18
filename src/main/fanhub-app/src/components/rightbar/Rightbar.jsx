@@ -15,17 +15,17 @@ export default function Rightbar({ user }) {
   );
 
   useEffect(() => {
-    const getFriends = async () => {
+    const getCreators = async () => {
       try {
-        const creators = user
-          ? await axios.get("/users/subscriptions/" + user.id)
-          : await axios.get("/users/subscriptions/" + currentUser.id);
+        const creators = await axios.get(
+          "/users/subscriptions/" + currentUser.id
+        );
         setCreators(creators.data);
       } catch (err) {
         console.log(err);
       }
     };
-    getFriends();
+    getCreators();
   }, [user]);
 
   useEffect(() => {
@@ -115,30 +115,34 @@ export default function Rightbar({ user }) {
             </span>
           </div>
         </div>
-        <h4 className="rightbarTitle">Subscriptions</h4>
-        <div className="rightbarFollowings">
-          {creators.map((creator) => (
-            <Link
-              to={"/profile/" + creator.username}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="rightbarFollowing">
-                <img
-                  src={
-                    creator.profilepic
-                      ? PF + creator.profilepic
-                      : PF + "person/noAvatar.png"
-                  }
-                  alt=""
-                  className="rightbarFollowingImg"
-                />
-                <span className="rightbarFollowingName">
-                  {creator.username}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {user.username === currentUser.username && (
+          <h4 className="rightbarTitle">Subscriptions</h4>
+        )}
+        {user.username === currentUser.username && (
+          <div className="rightbarFollowings">
+            {creators.map((creator) => (
+              <Link
+                to={"/profile/" + creator.username}
+                style={{ textDecoration: "none" }}
+              >
+                <div className="rightbarFollowing">
+                  <img
+                    src={
+                      creator.profilepic
+                        ? PF + creator.profilepic
+                        : PF + "person/noAvatar.png"
+                    }
+                    alt=""
+                    className="rightbarFollowingImg"
+                  />
+                  <span className="rightbarFollowingName">
+                    {creator.username}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </>
     );
   };
