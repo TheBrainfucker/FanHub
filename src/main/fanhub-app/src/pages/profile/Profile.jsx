@@ -2,16 +2,19 @@ import "./profile.css";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
-// import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState();
+  const { user: currentUser, dispatch } = useContext(AuthContext);
   const [userLoaded, setUserLoaded] = useState(false);
   const username = useParams().username;
+  const notFound = false;
+  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -34,11 +37,33 @@ export default function Profile() {
     getUser();
   }, [username]);
 
+  useEffect(() => {
+    const fetchSubscribed = async () => {
+      try {
+        const isSubscriber =
+          currentUser.subscriptionids.includes(user?.id) ||
+          currentUser.id === user.id;
+        setSubscribed(isSubscriber);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchSubscribed();
+  }, [user, currentUser.subscriptionids]);
+
   return (
     <>
       <div className="profile">
         <Sidebar />
-        {userLoaded ? (
+        {!userLoaded && !user && username && (
+          <div className="profileRight">
+            <div className="profileRightBottom">
+              <Feed username={username} notFound={true} />
+              <Rightbar />
+            </div>
+          </div>
+        )}
+        {userLoaded && user && username && (
           <div className="profileRight">
             <div className="profileRightTop">
               <div className="profileCover">
@@ -47,7 +72,7 @@ export default function Profile() {
                   src={
                     user.coverpic
                       ? PF + user.coverpic
-                      : PF + "person/DefaultCover1.jpg"
+                      : PF + "person/noCover.jpg"
                   }
                   alt=""
                 />
@@ -69,12 +94,10 @@ export default function Profile() {
               </div>
             </div>
             <div className="profileRightBottom">
-              <Feed username={username} />
-              <Rightbar user={user} />
+              <Feed username={username} subscribed={subscribed} />
+              <Rightbar user={user} subscribed={subscribed} />
             </div>
           </div>
-        ) : (
-          <p>User Loading...</p>
         )}
       </div>
     </>

@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <div className="homeContainer">
         <Sidebar />
-        <Feed />
+        <Feed subscribed={true} />
         <Rightbar />
       </div>
     </>

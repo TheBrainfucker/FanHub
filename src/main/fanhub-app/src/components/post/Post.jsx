@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-export default function Post({ post }) {
+export default function Post({ post, subscribed }) {
   const [love, setLove] = useState(post.love);
   const [isLoved, setIsLoved] = useState();
   const [user, setUser] = useState({});
@@ -26,11 +26,13 @@ export default function Post({ post }) {
   }, [post.user.id]);
 
   const loveHandler = () => {
-    try {
-      axios.put(`/posts/${post.id}/love/${currentUser.id}`);
-    } catch (err) {}
-    setLove(isLoved ? love - 1 : love + 1);
-    setIsLoved(!isLoved);
+    if (subscribed) {
+      try {
+        axios.put(`/posts/${post.id}/love/${currentUser.id}`);
+      } catch (err) {}
+      setLove(isLoved ? love - 1 : love + 1);
+      setIsLoved(!isLoved);
+    }
   };
 
   const handleDelete = async () => {
@@ -77,10 +79,21 @@ export default function Post({ post }) {
           <span className="postText">{post?.caption}</span>
           <img
             className="postImg"
-            src={post.content ? PF + "post/uploads/" + post.content : ""}
+            src={
+              subscribed
+                ? post.content
+                  ? PF + "post/uploads/" + post.content
+                  : ""
+                : PF + "lock.jpg"
+            }
             alt=""
           />
         </div>
+        {!subscribed && (
+          <dib className="postMessage">
+            <span>Subscribe to unlock content</span>
+          </dib>
+        )}
         <div className="postBottom">
           <div className="postBottomLeft">
             <img

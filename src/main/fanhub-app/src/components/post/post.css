@@ -95,3 +95,9 @@
   border-bottom: 1px dashed gray;
   font-size: 15px;
 }
+
+.postMessage {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+}

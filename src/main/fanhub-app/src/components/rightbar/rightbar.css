@@ -126,17 +126,25 @@
 
 .searchIcon {
   font-size: 20px !important;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   color: #ffa31a;
 }
 
 .searchInput {
   border: none;
-  width: 70%;
+  width: 90%;
+  border-radius: 30%;
+  padding-left: 10px;
 }
 
 .searchInput:focus {
   outline: none;
+}
+
+.searchButton {
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
 }
 
 .rightbarCenter {

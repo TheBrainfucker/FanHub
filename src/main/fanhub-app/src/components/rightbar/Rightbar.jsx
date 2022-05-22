@@ -5,17 +5,14 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { Add, Remove, Search } from "@material-ui/icons";
 
-export default function Rightbar({ user }) {
+export default function Rightbar({ user, subscribed }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [creators, setCreators] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [subscribed, setSubscribed] = useState(
-    currentUser.subscriptionids.includes(user?.id)
-  );
 
   useEffect(() => {
-    const getCreators = async () => {
+    const fetchCreators = async () => {
       try {
         const creators = await axios.get(
           "/users/subscriptions/" + currentUser.id
@@ -25,11 +22,11 @@ export default function Rightbar({ user }) {
         console.log(err);
       }
     };
-    getCreators();
-  }, [user]);
+    fetchCreators();
+  }, [user, currentUser.id]);
 
   useEffect(() => {
-    const getSuggestions = async () => {
+    const fetchSuggestions = async () => {
       try {
         const suggestions = await axios.get(
           "/users/suggestions/" + currentUser.id
@@ -39,8 +36,8 @@ export default function Rightbar({ user }) {
         console.log(err);
       }
     };
-    getSuggestions();
-  }, [currentUser]);
+    fetchSuggestions();
+  }, [user, currentUser.id]);
 
   const handleClick = async () => {
     try {
@@ -51,18 +48,28 @@ export default function Rightbar({ user }) {
         await axios.put(`/users/${user.id}/subscribe/${currentUser.id}`);
         dispatch({ type: "SUBSCRIBE", payload: user.id });
       }
-      setSubscribed(!subscribed);
+      subscribed = !subscribed;
     } catch (err) {}
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const search = "ggggg";
+    console.log(search);
   };
 
   const HomeRightbar = () => {
     return (
       <>
         <div className="rightbarCenter">
-          <div className="searchbar">
-            <Search className="searchIcon" />
-            <input placeholder="Search Fanhub" className="searchInput" />
-          </div>
+          <form className="searchUser" onSubmit={submitHandler}>
+            <div className="searchbar">
+              <input placeholder="Search Fanhub" className="searchInput" onSu />
+              <button className="searchButton" type="submit">
+                <Search className="searchIcon" />
+              </button>
+            </div>
+          </form>
         </div>
 
         <h4 className="rightbarTitle">Suggestions</h4>
@@ -146,6 +153,7 @@ export default function Rightbar({ user }) {
       </>
     );
   };
+
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">

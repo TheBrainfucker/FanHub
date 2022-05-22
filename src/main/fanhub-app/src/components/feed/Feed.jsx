@@ -5,7 +5,8 @@ import "./feed.css";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
-export default function Feed({ username }) {
+export default function Feed({ username, notFound, subscribed }) {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [posts, setPosts] = useState([]);
   const { user } = useContext(AuthContext);
 
@@ -26,12 +27,27 @@ export default function Feed({ username }) {
 
   return (
     <div className="feed">
-      <div className="feedWrapper">
-        {(!username || username === user.username) && <Share />}
-        {posts.map((p) => (
-          <Post key={p.id} post={p} />
-        ))}
-      </div>
+      {notFound ? (
+        <div className="feedWrapper">
+          <div className="post">
+            <div className="postWrapper">
+              <div className="postCenter">
+                <img className="postImg" src={PF + "404.webp"} alt="" />
+              </div>
+              <div className="postMessage">
+                <span>The Requested Page Cannot Be Found</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="feedWrapper">
+          {(!username || username === user.username) && <Share />}
+          {posts.map((p) => (
+            <Post key={p.id} post={p} subscribed={subscribed} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
