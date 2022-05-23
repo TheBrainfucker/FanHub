@@ -90,9 +90,9 @@ export default function Post({ post, subscribed }) {
           />
         </div>
         {!subscribed && (
-          <dib className="postMessage">
+          <div className="postMessage">
             <span>Subscribe to unlock content</span>
-          </dib>
+          </div>
         )}
         <div className="postBottom">
           <div className="postBottomLeft">

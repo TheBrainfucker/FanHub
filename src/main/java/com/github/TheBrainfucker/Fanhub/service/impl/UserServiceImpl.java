@@ -121,4 +121,19 @@ public class UserServiceImpl implements UserService<User> {
         }
         return newSuggestions;
     }
+
+    public Set<JSONObject> getSearchResults(String username) {
+        Set<User> users = userRepository.searchByName(username);
+        Set<JSONObject> searchResults = new HashSet<>();
+        for (User user : users) {
+            if (user.getRole().getName().equals("USER")) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", user.getId());
+                jsonObject.put("username", user.getUsername());
+                jsonObject.put("profilepic", user.getProfilepic());
+                searchResults.add(jsonObject);
+            }
+        }
+        return searchResults;
+    }
 }

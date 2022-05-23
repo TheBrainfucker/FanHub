@@ -67,16 +67,19 @@
   font-weight: 300;
 }
 
+.rightbarSearchResults,
 .rightbarFollowings {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 
+.rightbarSearchResults a:focus,
 .rightbarFollowings a:focus {
   outline: none;
 }
 
+.rightbarSearchResult,
 .rightbarFollowing {
   display: flex;
   flex-direction: column;
@@ -84,9 +87,17 @@
   cursor: pointer;
 }
 
+.rightbarSearchResultName,
 .rightbarFollowingName {
   color: white;
   margin: auto;
+}
+
+.rightbarSearchResultImg {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .rightbarFollowingImg {

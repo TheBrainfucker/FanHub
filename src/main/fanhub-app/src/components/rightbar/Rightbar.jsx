@@ -1,5 +1,5 @@
 import "./rightbar.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -9,7 +9,9 @@ export default function Rightbar({ user, subscribed }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [creators, setCreators] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
+  const searchInput = useRef();
 
   useEffect(() => {
     const fetchCreators = async () => {
@@ -49,13 +51,19 @@ export default function Rightbar({ user, subscribed }) {
         dispatch({ type: "SUBSCRIBE", payload: user.id });
       }
       subscribed = !subscribed;
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const search = "ggggg";
-    console.log(search);
+    try {
+      const res = await axios.post("users/search/" + searchInput.current.value);
+      setSearchResults(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const HomeRightbar = () => {
@@ -64,14 +72,42 @@ export default function Rightbar({ user, subscribed }) {
         <div className="rightbarCenter">
           <form className="searchUser" onSubmit={submitHandler}>
             <div className="searchbar">
-              <input placeholder="Search Fanhub" className="searchInput" onSu />
+              <input
+                placeholder="Search Fanhub"
+                className="searchInput"
+                minLength="2"
+                required
+                ref={searchInput}
+              />
               <button className="searchButton" type="submit">
                 <Search className="searchIcon" />
               </button>
             </div>
           </form>
         </div>
-
+        <div className="rightbarSearchResults">
+          {searchResults.map((searchResults) => (
+            <Link
+              to={"/" + searchResults.username}
+              style={{ textDecoration: "none" }}
+            >
+              <div className="rightbarSearchResult">
+                <img
+                  src={
+                    searchResults.profilepic
+                      ? PF + searchResults.profilepic
+                      : PF + "person/noAvatar.png"
+                  }
+                  alt=""
+                  className="rightbarSearchResultImg"
+                />
+                <span className="rightbarSearchResultName">
+                  {searchResults.username}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
         <h4 className="rightbarTitle">Suggestions</h4>
         <div className="rightbarFollowings">
           {suggestions.map((suggestions) => (

@@ -198,4 +198,13 @@ public class UserController {
         return ResponseEntity.ok(suggestions.toString());
     }
 
+    @PostMapping("/search/{username}")
+    public ResponseEntity<Object> searchUser(@PathVariable String username) {
+        if (username.length() < 2) {
+            return null;
+        }
+        Set<JSONObject> searchResults = userServiceImpl.getSearchResults(username);
+        return ResponseEntity.ok(searchResults.toString());
+    }
+
 }
