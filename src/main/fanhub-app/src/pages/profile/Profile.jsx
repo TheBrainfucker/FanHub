@@ -9,11 +9,10 @@ import { AuthContext } from "../../context/AuthContext";
 
 export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({});
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [userLoaded, setUserLoaded] = useState(false);
   const username = useParams().username;
-  const notFound = false;
   const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
@@ -32,6 +31,8 @@ export default function Profile() {
       if (res.success) {
         setUser(res.data);
         setUserLoaded(true);
+      } else {
+        setUser();
       }
     };
     getUser();
@@ -55,7 +56,7 @@ export default function Profile() {
     <>
       <div className="profile">
         <Sidebar />
-        {!userLoaded && !user && username && (
+        {!userLoaded && !user && (
           <div className="profileRight">
             <div className="profileRightBottom">
               <Feed username={username} notFound={true} />
@@ -63,7 +64,7 @@ export default function Profile() {
             </div>
           </div>
         )}
-        {userLoaded && user && username && (
+        {userLoaded && user && (
           <div className="profileRight">
             <div className="profileRightTop">
               <div className="profileCover">
